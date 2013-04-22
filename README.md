@@ -1,8 +1,10 @@
 # Daemontools
 
-TODO: Write a gem description
+Manage daemontools from ruby code. 
 
 ## Installation
+
+    chmod 0777 /etc/service/ && sudo
 
 Add this line to your application's Gemfile:
 
@@ -18,7 +20,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+    
 
 ## Contributing
 
