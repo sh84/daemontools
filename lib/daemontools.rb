@@ -1,4 +1,5 @@
 require "daemontools/version"
+require "daemontools/service_builder"
 require 'etc'
 require 'erb'
 
