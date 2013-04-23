@@ -1,0 +1,5 @@
+#!/bin/sh
+<%= "sleep #{@sleep}" if @sleep && @sleep.to_i > 0 %>
+exec 2>&1
+<%= @pre_command if @pre_command %>
+exec <%= "setuidgid #{@user}" if @user %> <%= @command %>
