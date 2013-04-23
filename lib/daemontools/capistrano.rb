@@ -1,3 +1,5 @@
+require 'daemontools'
+
 Capistrano::Configuration.instance(:must_exist).load do
   namespace :daemontools do
     desc "Update daemontools services using services.rb"

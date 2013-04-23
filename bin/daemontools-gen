@@ -8,6 +8,4 @@ roles = ARGV[1] || ""
 puts "Building svc services.."
 
 builder = Daemontools::Builder.new("#{Dir.pwd}/config/services.rb")
-p builder.all_roles
-
 builder.gen(roles, environment)
