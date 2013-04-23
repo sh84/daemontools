@@ -59,6 +59,16 @@ module Daemontools
     Dir.mkdir("#{@path}/log") unless Dir.exists?("#{@path}/log")
     File.open("#{@path}/log/run", 'w', 0755) {|f| f.write(run_template('log.erb'))}
     File.open("#{@path}/run", 'w', 0755) {|f| f.write(run_template('run.erb'))}
+    
+    unless options[:not_wait]
+      wait_timeout = options[:wait_timeout] || 10
+      now = Time.now.to_f
+      while `sudo svstat #{@path} 2>&1`.match(/unable to open/i)
+        raise "Timeout wait for svc add service" if Time.now.to_f - now > wait_timeout
+        sleep 0.1
+      end
+    end
+    
     true
   end
   

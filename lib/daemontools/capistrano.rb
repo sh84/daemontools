@@ -19,7 +19,7 @@ Capistrano::Configuration.instance(:must_exist).load do
           path = fetch(:release_path)
                     
           servers.each do |server, roles|
-            command = "cd #{path} && daemontools-gen #{fetch :rails_env, "production"} #{roles.join(',')}"
+            command = "cd #{path} && bundle exec daemontools-gen #{fetch :rails_env, "production"} #{roles.join(',')}"
             run command
           end
         end
