@@ -1,0 +1,3 @@
+/bin/bash -l -c '<%= @command %> 2>&1 &
+trap "kill $!" exit INT TERM
+wait'

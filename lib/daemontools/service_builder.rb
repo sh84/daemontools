@@ -18,7 +18,9 @@ module Daemontools
     
     def command(param, options = {})
       Daemontools.stop(@curr_service_name) if Daemontools.exists?(@curr_service_name)
-      cmd = "/bin/bash -l -c '#{param.gsub(':environment', @environment)}' 2>&1"
+      @command = param.gsub(':environment', @environment)
+      template_path = File.expand_path(File.dirname(__FILE__))+'/../../templates/rvm.erb'
+      cmd = ERB.new(File.read(template_path)).result(binding())
       Daemontools.add(@curr_service_name, cmd)
       Daemontools.make_run_status_up(@curr_service_name)
       Daemontools.start(@curr_service_name)
