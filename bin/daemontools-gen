@@ -5,7 +5,7 @@ require 'daemontools'
 
 environment = ARGV[0] || "production"
 roles = ARGV[1] || ""
-puts "Building svc services.."
+puts "Building svc services for roles #{roles} .."
 
 builder = Daemontools::Builder.new("#{Dir.pwd}/config/services.rb")
 builder.gen(roles, environment)
