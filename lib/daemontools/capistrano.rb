@@ -31,6 +31,6 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
   end
   
-  before "deploy:finalize_update", "daemontools:update"
+  after "deploy:create_symlink", "daemontools:update"
   after "deploy:rollback", "daemontools:update"
 end
