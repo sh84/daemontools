@@ -18,7 +18,7 @@ module Daemontools
     check_service_exists(name)
     r = `sudo svstat #{@path} 2>&1`
     raise r if $?.exitstatus != 0
-    raise "Unknown status" unless r.match(/.*?:\s*(\S+).*(\d+) seconds.*/)
+    raise "Unknown status" unless r.match(/.*?:\s*(\S+).*\s(\d+) seconds.*/)
     [$1, $2.to_i]
   end
   
