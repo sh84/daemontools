@@ -42,6 +42,19 @@ module Daemontools
     run_svc(name, 't')
   end
   
+  def self.add_empty(name)
+    path = "#{@svc_root}/#{name}"
+    Dir.mkdir(path) unless Dir.exists?(path)
+    File.open("#{path}/down", 'w') {|f| f.write('')}
+    now = Time.now.to_f
+    while `sudo svstat #{path} 2>&1`.match(/unable to open/i)
+      raise "Timeout wait for svc add service" if Time.now.to_f - now > 10
+      sleep 0.1
+    end
+    stop(name)
+    true
+  end
+  
   def self.add(name, command, options = {})
     @name = name
     @command = command
