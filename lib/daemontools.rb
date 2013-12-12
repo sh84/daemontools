@@ -51,6 +51,7 @@ module Daemontools
       raise "Timeout wait for svc add service" if Time.now.to_f - now > 10
       sleep 0.1
     end
+    File.delete("#{path}/down")
     stop(name)
     true
   end
