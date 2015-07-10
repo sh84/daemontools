@@ -56,14 +56,15 @@ module Daemontools
     true
   end
   
-  def self.add(name, command, options = {})
+  def self.add(name, command, change_user_command, options = {})
     @name = name
     @command = command
     @log_dir = options[:log_dir] || "#{@log_root}/#{@name}"
     @pre_command = options[:pre_command]
     @sleep = options[:sleep] || 3
     @path = "#{@svc_root}/#{name}"
-    
+    @change_user_command = change_user_command
+
     if Dir.exists?(@path)
       stop(name)
     else

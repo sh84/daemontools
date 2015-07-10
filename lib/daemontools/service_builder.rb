@@ -1,10 +1,12 @@
 module Daemontools
   class Builder
-    attr_accessor :environment,  :all_roles, :services, :curr_service_name
+    attr_accessor :environment,  :all_roles, :services, :curr_service_name, :change_user_command
     
     def initialize(filename)
       @all_roles = []
       @services = {}
+      @change_user_command = 'setuidgid'
+
       eval(File.read(filename), binding())
     end
     
@@ -21,7 +23,7 @@ module Daemontools
       @command = param.gsub(':environment', @environment)
       template_path = File.expand_path(File.dirname(__FILE__))+'/../../templates/rvm.erb'
       cmd = ERB.new(File.read(template_path)).result(binding())
-      Daemontools.add(@curr_service_name, cmd)
+      Daemontools.add(@curr_service_name, cmd, @change_user_command)
       Daemontools.make_run_status_up(@curr_service_name)
       Daemontools.start(@curr_service_name)
     end
@@ -48,5 +50,10 @@ module Daemontools
         end
       end
     end
+
+    def change_user_command(cmd)
+      @change_user_command = cmd
+    end
+
   end
 end
