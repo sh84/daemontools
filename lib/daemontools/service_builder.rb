@@ -23,7 +23,7 @@ module Daemontools
       @command = param.gsub(':environment', @environment)
       template_path = File.expand_path(File.dirname(__FILE__))+'/../../templates/rvm.erb'
       cmd = ERB.new(File.read(template_path)).result(binding())
-      Daemontools.add(@curr_service_name, cmd, @change_user_command)
+      Daemontools.add(@curr_service_name, cmd, { :change_user_command => @change_user_command })
       Daemontools.make_run_status_up(@curr_service_name)
       Daemontools.start(@curr_service_name)
     end
