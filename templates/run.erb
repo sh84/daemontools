@@ -1,4 +1,7 @@
 #!/bin/sh
+<% @ulimit.each do |k,v| %>
+ulimit -<%=k%> <%=v%>
+<% end %>
 <%= "sleep #{@sleep}" if @sleep && @sleep.to_i > 0 %>
 exec 2>&1
 <%= @pre_command if @pre_command %>
