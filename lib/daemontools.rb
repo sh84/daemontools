@@ -63,7 +63,8 @@ module Daemontools
     @pre_command = options[:pre_command]
     @sleep = options[:sleep] || 3
     @path = "#{@svc_root}/#{name}"
-    
+    @change_user_command = options[:change_user_command]
+
     if Dir.exists?(@path)
       stop(name)
     else
