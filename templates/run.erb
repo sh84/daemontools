@@ -5,4 +5,4 @@ ulimit -<%=k%> <%=v%>
 <%= "sleep #{@sleep}" if @sleep && @sleep.to_i > 0 %>
 exec 2>&1
 <%= @pre_command if @pre_command %>
-exec <%= "#{@change_user_command} #{@user}" if @user %> <%= @command %>
+<%= "#{@change_user_command} #{@user}" if @user %> <%= @command %>
