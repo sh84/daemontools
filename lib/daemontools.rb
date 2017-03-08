@@ -65,6 +65,7 @@ module Daemontools
     @path = "#{@svc_root}/#{name}"
     @change_user_command = options[:change_user_command]
     @ulimit = options[:ulimit]
+    @write_time = options[:write_time]
 
     if Dir.exists?(@path)
       stop(name)
