@@ -3,4 +3,4 @@
 LOGDIR=<%= @log_dir %>
 mkdir -p $LOGDIR
 <%= "chmod 0777 $LOGDIR" if @user %>
-exec <%= "setuidgid #{@user}" if @user %> multilog t s16000000 n25 $LOGDIR
+exec <%= "setuidgid #{@user}" if @user %> multilog <%= "t " if @write_time %>s16000000 n25 $LOGDIR
