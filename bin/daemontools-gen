@@ -7,5 +7,16 @@ environment = ARGV[0] || "production"
 roles = ARGV[1] || ""
 puts "Building svc services for roles #{roles} .."
 
-builder = Daemontools::Builder.new("#{Dir.pwd}/config/services.rb")
-builder.gen(roles, environment)
+old_path = ARGV[2] || ''
+new_path = ARGV[3] || ''
+
+if old_path.empty? || new_path.empty?
+  builder = Daemontools::Builder.new("#{Dir.pwd}/config/services.rb")
+  builder.gen(roles, environment)
+else
+  previous_builder = Daemontools::Builder.new("#{old_path}/config/services.rb")
+  current_builder = Daemontools::Builder.new("#{new_path}/config/services.rb")
+  remover = Daemontools::Remover.new(roles, previous_builder, current_builder)
+  remover.remove_unused_services
+  current_builder.gen(roles, environment)
+end

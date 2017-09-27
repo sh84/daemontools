@@ -1,5 +1,6 @@
-require "daemontools/version"
-require "daemontools/service_builder"
+require 'daemontools/version'
+require 'daemontools/service_builder'
+require 'daemontools/service_remover'
 require 'etc'
 require 'erb'
 
@@ -89,10 +90,11 @@ module Daemontools
     true
   end
 
-  def self.delete(name)
+  def self.delete(name, rm_cmd = nil)
     check_service_exists(name)
     stop(name)
-    r = `sudo rm -rf #{@path} 2>&1`
+    cmd = rm_cmd.nil? ? "sudo rm -rf #{@path} 2>&1" : "#{rm_cmd} #{@path}"
+    r = `#{cmd}`
     raise r if $?.exitstatus != 0
     true
   end
