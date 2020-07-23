@@ -16,10 +16,11 @@ Capistrano::Configuration.instance(:must_exist).load do
           path = fetch(:previous_release)
           puts "rollback 1"
         else
+          previous_release_path = fetch(:previous_release)
           path = fetch(:release_path)
 
           servers.each do |server, roles|
-            command = "cd #{path} && bundle exec daemontools-gen #{fetch :rails_env, "production"} #{roles.join(',')} #{current_path} #{release_path}"
+            command = "cd #{path} && bundle exec daemontools-gen #{fetch :rails_env, "production"} #{roles.join(',')} #{previous_release_path} #{current_path}"
             run command, :hosts => server
           end
         end
