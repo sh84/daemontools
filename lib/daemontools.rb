@@ -93,7 +93,7 @@ module Daemontools
   def self.delete(name, rm_cmd = nil)
     check_service_exists(name)
     stop(name)
-    cmd = rm_cmd.nil? ? "rm -rf #{@path} 2>&1" : "#{rm_cmd} #{@path}"
+    cmd = rm_cmd.nil? ? "sudo rm -rf #{@path} 2>&1" : "#{rm_cmd} #{@path}"
     r = `#{cmd}`
     raise r if $?.exitstatus != 0
     true
