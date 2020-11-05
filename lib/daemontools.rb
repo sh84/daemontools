@@ -6,13 +6,18 @@ require 'erb'
 
 module Daemontools
   class << self
-    attr_accessor :svc_root, :log_root
+    attr_accessor :svc_root, :log_root, :tmp_root
   end
   @svc_root = '/etc/service'
   @log_root = '/var/log/svc'
+  @tmp_root = '/tmp'
 
   def self.exists?(name)
     check_service_exists(name, false)
+  end
+
+  def self.tmp_exists?(name)
+    Dir.exists?("#{@tmp_root}/#{name}")
   end
 
   def self.status(name)
@@ -54,6 +59,29 @@ module Daemontools
     end
     File.delete("#{path}/down")
     stop(name)
+    true
+  end
+
+  def self.add_empty_tmp(name)
+    path = "#{@tmp_root}/#{name}"
+    Dir.mkdir(path) unless Dir.exists?(path)
+    true
+  end
+
+  def self.move_tmp(name)
+    tmp_path = "#{@tmp_root}/#{name}"
+    svc_path = "#{@svc_root}/#{name}"
+
+    r = `mv #{tmp_path} #{svc_path}`
+    raise r if $?.exitstatus != 0
+    raise r if ! r.empty?
+
+    now = Time.now.to_f
+    while `sudo svstat #{svc_path} 2>&1`.match(/unable to open/i)
+      raise "Timeout wait for svc add service" if Time.now.to_f - now > 10
+      sleep 0.1
+    end
+
     true
   end
 
