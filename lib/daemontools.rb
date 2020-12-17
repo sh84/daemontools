@@ -17,7 +17,7 @@ module Daemontools
   end
 
   def self.tmp_exists?(name)
-    Dir.exists?("#{@tmp_root}/#{name}")
+    Dir.exists?("#{@tmp_root}/daemontools_service_#{name}")
   end
 
   def self.status(name)
@@ -63,13 +63,13 @@ module Daemontools
   end
 
   def self.add_empty_tmp(name)
-    path = "#{@tmp_root}/#{name}"
+    path = "#{@tmp_root}/daemontools_service_#{name}"
     Dir.mkdir(path) unless Dir.exists?(path)
     true
   end
 
   def self.move_tmp(name)
-    tmp_path = "#{@tmp_root}/#{name}"
+    tmp_path = "#{@tmp_root}/daemontools_service_#{name}"
     svc_path = "#{@svc_root}/#{name}"
 
     r = `mv #{tmp_path} #{svc_path}`
