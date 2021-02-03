@@ -10,13 +10,22 @@ puts "Building svc services for roles #{roles} .."
 old_path = ARGV[2] || ''
 new_path = ARGV[3] || ''
 
-if old_path.empty? || new_path.empty?
-  builder = Daemontools::Builder.new("#{Dir.pwd}/config/services.rb")
-  builder.gen(roles, environment)
-else
+def need_remove_old_services?(old_path, new_path)
+  # If no new path there is no reason to try remove old services
+  return false if new_path.nil? || new_path.empty?
+  # If no old path there is no reason to try remove old services
+  return false if old_path.nil? || old_path.empty?
+  # Check if config files are exists
+  File.exist?("#{old_path}/config/services.rb") && File.exist?("#{new_path}/config/services.rb")
+end
+
+if need_remove_old_services?(old_path, new_path)
   previous_builder = Daemontools::Builder.new("#{old_path}/config/services.rb")
   current_builder = Daemontools::Builder.new("#{new_path}/config/services.rb")
   remover = Daemontools::Remover.new(roles, previous_builder, current_builder)
   remover.remove_unused_services
   current_builder.gen(roles, environment)
+else
+  builder = Daemontools::Builder.new("#{Dir.pwd}/config/services.rb")
+  builder.gen(roles, environment)
 end
