@@ -6,8 +6,8 @@ module Daemontools
       true
     end
 
-    def delete_services(service_names, role)
-      find_services_by_name(service_names, role).map(&:first)
+    def delete_services(service_names)
+      service_names
     end
   end
 end

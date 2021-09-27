@@ -15,22 +15,21 @@ module Daemontools
     def remove_unused_services
       return if @deleted_services.empty?
 
-      @deleted_services.each do |role, services|
-        puts "Delete services #{services} for role #{role}"
-        @previous_builder.delete_services(services, role)
-      end
+      puts "Services for delete: #{@deleted_services.join(', ')}"
+      @previous_builder.delete_services(@deleted_services)
     end
 
     private
 
     def find_services_changes(old_services, new_services)
-      @deleted_services = {}
-      @roles.each do |role|
-        old_role_services = (old_services[role] || []).map(&:first)
-        new_role_services = (new_services[role] || []).map(&:first)
-        services_for_del = old_role_services - new_role_services
-        @deleted_services[role] = services_for_del unless services_for_del.empty?
-      end
+      old_services_for_server = services_for_roles(old_services, @roles)
+      new_services_for_server = services_for_roles(new_services, @roles)
+      @deleted_services = old_services_for_server - new_services_for_server
+    end
+
+    # Extracting service names for roles from config
+    def services_for_roles(services, roles)
+      services.values_at(*roles).flatten(1).compact.map(&:first).compact.uniq
     end
   end
 end

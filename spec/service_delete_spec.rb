@@ -14,17 +14,21 @@ RSpec.describe Daemontools::Remover, '#initialize' do
 
     remover = Daemontools::RemoverStub.new(roles, old_builder, new_builder)
     deleted = remover.deleted_services
-    deleted_roles = %i[role_with_deleted role_with_modifies role_deleted]
+    deleted_services = %i[deleted_service_1 deleted_service_2 deleted_service_3]
 
     context 'Check roles where services were deleted' do
       it 'Number of roles for deleted services must be equal to length of deleted roles' do
-        expect(deleted.keys.size).to eq deleted_roles.length
+        expect(deleted.size).to eq deleted_services.length
       end
 
-      deleted.each_key do |role|
-        it "Should contain #{role}" do
-          expect(deleted_roles.include?(role)).to eq true
+      deleted.each do |service_name|
+        it "Should contain #{service_name}" do
+          expect(deleted_services.include?(service_name)).to eq true
         end
+      end
+
+      it 'Include service from renamed role' do
+        expect(deleted_services.include?('service4')).to eq false
       end
     end
 

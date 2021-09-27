@@ -35,3 +35,7 @@ end
 service :deleted_service_3, :roles => [:role_deleted] do
   command3 "script/deleted_service_3 argument1"
 end
+
+service :service4, :roles => [:role_to_rename] do
+  command3 "script/service4 argument1"
+end

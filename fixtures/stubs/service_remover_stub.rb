@@ -5,9 +5,7 @@ module Daemontools
     def remove_unused_services
       return if @deleted_services.empty?
 
-      @deleted_services.map do |role, services|
-        @previous_builder.delete_services(services, role)
-      end
+      @previous_builder.delete_services(@deleted_services)
     end
   end
 end

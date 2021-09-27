@@ -31,3 +31,7 @@ end
 service :service_new_2, :roles => [:new_role] do
   command1 "service_new_2 arg1"
 end
+
+service :service4, :roles => [:role_renamed] do
+  command3 "script/service4 argument1"
+end

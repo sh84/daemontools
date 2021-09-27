@@ -72,9 +72,8 @@ module Daemontools
       @delete_command = cmd.empty? ? nil : cmd
     end
 
-    def delete_services(service_names, role)
-      services = find_services_by_name(service_names, role)
-      services.each { |service| Daemontools.delete(service[0], @delete_command) }
+    def delete_services(services)
+      services.each { |service| Daemontools.delete(service, @delete_command) }
     end
 
     def find_services_by_name(service_names, role)
