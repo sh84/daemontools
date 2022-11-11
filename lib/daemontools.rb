@@ -121,6 +121,7 @@ module Daemontools
   def self.delete(name, rm_cmd = nil)
     return false unless exists?(name)
     stop(name)
+    sleep 0.3
     cmd = rm_cmd.nil? ? "sudo rm -rf #{@path} 2>&1" : "#{rm_cmd} #{@path}"
     r = `#{cmd}`
     raise r if $?.exitstatus != 0
