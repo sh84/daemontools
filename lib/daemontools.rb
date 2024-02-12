@@ -92,6 +92,7 @@ module Daemontools
     @pre_command = options[:pre_command]
     @sleep = options[:sleep] || 3
     @path = "#{@svc_root}/#{name}"
+    @log_path = "#{@path}/log"
     @change_user_command = options[:change_user_command]
     @ulimit = options[:ulimit]
     @write_time = options[:write_time]
@@ -102,8 +103,9 @@ module Daemontools
       Dir.mkdir(@path)
     end
     File.open("#{@path}/down", 'w') {|f| f.write('')}
-    Dir.mkdir("#{@path}/log") unless Dir.exists?("#{@path}/log")
-    File.open("#{@path}/log/run", 'w', 0755) {|f| f.write(run_template('log.erb'))}
+    Dir.mkdir(@log_path) unless Dir.exists?(@log_path)
+    File.open("#{@log_path}/down", 'w') {|f| f.write('')}
+    File.open("#{@log_path}/run", 'w', 0755) {|f| f.write(run_template('log.erb'))}
     File.open("#{@path}/run", 'w', 0755) {|f| f.write(run_template('run.erb'))}
 
     unless options[:not_wait]
@@ -143,12 +145,18 @@ module Daemontools
 
   def self.make_run_status_up(name)
     File.delete("#{@path}/down")
+    File.delete("#{@log_path}/down") if Dir.exists?(@log_path)
     true
   end
 
   def self.make_run_status_down(name)
     check_service_exists(name)
     File.open("#{@path}/down", 'w') {|f| f.write('')}
+
+    if Dir.exists?(@log_path)
+      File.open("#{@log_path}/down", 'w') { |f| f.write('') }
+    end
+
     true
   end
 
@@ -156,6 +164,7 @@ module Daemontools
 
   def self.check_service_exists(name, raise_error = true)
     @path = "#{@svc_root}/#{name}"
+    @log_path = "#{@path}/log"
     if raise_error
       raise "Service #{name} not exists" unless Dir.exists?(@path)
     else
@@ -168,6 +177,13 @@ module Daemontools
     r = `sudo svc -#{command} #{@path} 2>&1`
     raise r if $?.exitstatus != 0
     raise r if ! r.empty?
+
+    if Dir.exists?(@log_path)
+      r = `sudo svc -#{command} #{@log_path} 2>&1`
+      raise r if $?.exitstatus != 0
+      raise r if ! r.empty?
+    end
+
     true
   end
 
