@@ -3,7 +3,13 @@
 pid=$!
 pgid=$(ps -o pgid= -p $pid | tr -d " ")
 
-trap "kill -TERM -$pgid" EXIT INT TERM
+trap "
+  echo \"Sending SIGTERM to main process PID \$pid\"
+  kill -TERM \$pid
+  sleep 0.5
+  echo \"Sending SIGKILL to process group PGID \$pgid\"
+  kill -KILL -\$pgid
+" EXIT INT TERM
 
 wait $pid
 '
