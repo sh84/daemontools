@@ -1,3 +1,15 @@
-/bin/bash -l -c '<%= @command.gsub('&&', "\n") %> 2>&1 &
-trap "kill $!" exit INT TERM
-wait'
+/bin/bash -l -c '
+<%= @command.gsub('&&', "\n") %> 2>&1 &
+pid=$!
+pgid=$(ps -o pgid= -p $pid | tr -d " ")
+
+trap "
+  echo \"Sending SIGTERM to main process PID \$pid\"
+  kill -TERM \$pid
+  sleep 0.5
+  echo \"Sending SIGKILL to process group PGID \$pgid\"
+  kill -KILL -\$pgid
+" EXIT INT TERM
+
+wait $pid
+'
