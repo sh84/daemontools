@@ -166,7 +166,7 @@ module Daemontools
 
     def run_template(template_name)
       @user = Etc.getpwuid(Process.uid).name
-      template_path = "#{__dir__}/../templates/#{template_name}"
+      template_path = "#{__dir__}/../../templates/#{template_name}"
       ERB.new(File.read(template_path)).result(binding)
     end
 
